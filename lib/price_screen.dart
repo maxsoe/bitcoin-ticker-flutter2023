@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'coin_data.dart';
+import 'services/rates.dart';
 
 class PriceScreen extends StatefulWidget {
+  PriceScreen({this.rates});
+  final rates;
+
   @override
   _PriceScreenState createState() => _PriceScreenState();
 }
 
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = currenciesList.first;
+  String displayedRate;
+
+  @override
+  void initState() {
+    super.initState();
+    updateUI(widget.rates);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +41,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = ? USD',
+                  '1 BTC = $displayedRate USD',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
@@ -79,5 +90,15 @@ class _PriceScreenState extends State<PriceScreen> {
         ],
       ),
     );
+  }
+
+  void updateUI(rates) {
+    setState(() {
+      if (rates == null) {
+        displayedRate = 'Unable to get exhange rates';
+        return;
+      }
+      displayedRate = rates.toString();
+    });
   }
 }
