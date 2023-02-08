@@ -13,6 +13,7 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = currenciesList.first;
   String displayedRate;
+  Rates exchangeRate = Rates();
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = $displayedRate USD',
+                  '1 BTC = $displayedRate $selectedCurrency',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
@@ -80,10 +81,14 @@ class _PriceScreenState extends State<PriceScreen> {
                   value: value,
                 );
               }).toList(),
-              onChanged: (selectedValue) {
+              onChanged: (selectedValue) async {
                 setState(() {
                   selectedCurrency = selectedValue;
+                  debugPrint('selectedCurrency is $selectedCurrency');
                 });
+                var exchangeRateData = await exchangeRate.getExchangeRate(
+                    fiatCurrency: selectedCurrency);
+                updateUI(exchangeRateData);
               },
             ),
           ),

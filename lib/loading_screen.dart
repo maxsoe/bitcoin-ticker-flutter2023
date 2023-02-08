@@ -23,7 +23,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void getExchangeRateData() async {
     Rates exchangeRate = Rates();
-    var exchangeRateData = await exchangeRate.getExchangeRate();
+    var exchangeRateData =
+        await exchangeRate.getExchangeRate(fiatCurrency: 'AUD');
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return PriceScreen(rates: exchangeRateData);
