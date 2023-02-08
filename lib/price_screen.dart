@@ -14,6 +14,7 @@ class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = currenciesList.first;
   String displayedRate;
   Rates exchangeRate = Rates();
+  bool loading = false;
 
   @override
   void initState() {
@@ -41,14 +42,23 @@ class _PriceScreenState extends State<PriceScreen> {
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = $displayedRate $selectedCurrency',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
+                // child: Text(
+                //   '1 BTC = $displayedRate $selectedCurrency',
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     fontSize: 20.0,
+                //     color: Colors.white,
+                //   ),
+                child: loading
+                    ? Text('loading')
+                    : Text(
+                        '1 BTC = $displayedRate $selectedCurrency',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
               ),
             ),
           ),
@@ -85,9 +95,12 @@ class _PriceScreenState extends State<PriceScreen> {
                 setState(() {
                   selectedCurrency = selectedValue;
                   debugPrint('selectedCurrency is $selectedCurrency');
+                  debugPrint("loading");
+                  loading = true;
                 });
                 var exchangeRateData = await exchangeRate.getExchangeRate(
                     fiatCurrency: selectedCurrency);
+
                 updateUI(exchangeRateData);
               },
             ),
@@ -103,6 +116,8 @@ class _PriceScreenState extends State<PriceScreen> {
         displayedRate = 'Unable to get exhange rates';
         return;
       }
+      debugPrint('loaded');
+      loading = false;
       displayedRate = rates.toString();
     });
   }
