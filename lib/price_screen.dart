@@ -32,35 +32,16 @@ class _PriceScreenState extends State<PriceScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                // child: Text(
-                //   '1 BTC = $displayedRate $selectedCurrency',
-                //   textAlign: TextAlign.center,
-                //   style: TextStyle(
-                //     fontSize: 20.0,
-                //     color: Colors.white,
-                //   ),
-                child: loading
-                    ? Text('loading')
-                    : Text(
-                        '1 BTC = $displayedRate $selectedCurrency',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.white,
-                        ),
-                      ),
-              ),
-            ),
+          Column(
+            children: [
+              // Padding(
+              //   padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+              //   child: RateCard('BTC'),
+              // ),
+              RateCard('BTC'),
+              RateCard('ETH'),
+              RateCard('LTC'),
+            ],
           ),
           Container(
             height: 150.0,
@@ -68,22 +49,7 @@ class _PriceScreenState extends State<PriceScreen> {
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
             child: DropdownButton(
-              // needs value and items properties
               value: selectedCurrency,
-              // items: [
-              //   DropdownMenuItem(
-              //     child: Text('USD'),
-              //     value: 'USD',
-              //   ),
-              //   DropdownMenuItem(
-              //     child: Text('EUR'),
-              //     value: 'EUR',
-              //   ),
-              //   DropdownMenuItem(
-              //     child: Text('GBP'),
-              //     value: 'GPB',
-              //   ),
-              // ],
               items:
                   currenciesList.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem(
@@ -106,6 +72,29 @@ class _PriceScreenState extends State<PriceScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Card RateCard(cryptoAsset) {
+    return Card(
+      color: Colors.lightBlueAccent,
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+        child: loading
+            ? Text('loading')
+            : Text(
+                '1 $cryptoAsset = $displayedRate $selectedCurrency',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
       ),
     );
   }
