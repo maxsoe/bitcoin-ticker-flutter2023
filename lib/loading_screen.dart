@@ -23,11 +23,19 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   void getExchangeRateData() async {
     Rates exchangeRate = Rates();
-    var exchangeRateData =
-        await exchangeRate.getExchangeRate(fiatCurrency: 'AUD');
+    var exchangeRateBTC = await exchangeRate.getExchangeRate(
+        fiatCurrency: 'AUD', cryptoCurrency: 'BTC');
+    var exchangeRateETH = await exchangeRate.getExchangeRate(
+        fiatCurrency: 'AUD', cryptoCurrency: 'ETH');
+    var exchangeRateLTC = await exchangeRate.getExchangeRate(
+        fiatCurrency: 'AUD', cryptoCurrency: 'LTC');
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return PriceScreen(rates: exchangeRateData);
+      return PriceScreen(
+        rateForBTC: exchangeRateBTC,
+        rateForETH: exchangeRateETH,
+        rateForLTC: exchangeRateLTC,
+      );
     }));
   }
 }

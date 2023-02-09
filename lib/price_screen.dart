@@ -3,8 +3,15 @@ import 'coin_data.dart';
 import 'services/rates.dart';
 
 class PriceScreen extends StatefulWidget {
-  PriceScreen({this.rates});
-  final rates;
+  PriceScreen({
+    @required this.rateForBTC,
+    @required this.rateForETH,
+    @required this.rateForLTC,
+  });
+
+  final rateForBTC;
+  final rateForETH;
+  final rateForLTC;
 
   @override
   _PriceScreenState createState() => _PriceScreenState();
@@ -12,14 +19,21 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCurrency = currenciesList.first;
-  String displayedRate;
+  String returnedBtcRate;
+  String returnedEthRate;
+  String returnedLtcRate;
   Rates exchangeRate = Rates();
   bool loading = false;
 
   @override
   void initState() {
     super.initState();
-    updateUI(widget.rates);
+    // updateUI(widget.rates);
+    updateUI(
+      btcRate: widget.rateForBTC,
+      ethRate: widget.rateForETH,
+      ltcRate: widget.rateForLTC,
+    );
   }
 
   @override
@@ -35,13 +49,9 @@ class _PriceScreenState extends State<PriceScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Padding(
-              //   padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-              //   child: RateCard('BTC'),
-              // ),
-              rateCard('BTC'),
-              rateCard('ETH'),
-              rateCard('LTC'),
+              rateCard(cryptoAsset: 'BTC', cryptoRate: returnedBtcRate),
+              rateCard(cryptoAsset: 'ETH', cryptoRate: returnedEthRate),
+              rateCard(cryptoAsset: 'LTC', cryptoRate: returnedLtcRate)
             ],
           ),
           Container(
@@ -65,11 +75,18 @@ class _PriceScreenState extends State<PriceScreen> {
                   debugPrint("loading");
                   loading = true;
                 });
-                var exchangeRateData = await exchangeRate.getExchangeRate(
-                    fiatCurrency: selectedCurrency);
+                var exchangeRateBTC = await exchangeRate.getExchangeRate(
+                    cryptoCurrency: 'BTC', fiatCurrency: selectedCurrency);
+                var exchangeRateETH = await exchangeRate.getExchangeRate(
+                    cryptoCurrency: 'ETH', fiatCurrency: selectedCurrency);
+                var exchangeRateLTC = await exchangeRate.getExchangeRate(
+                    cryptoCurrency: 'LTC', fiatCurrency: selectedCurrency);
 
-                updateUI(exchangeRateData);
-                //TODO: get exchangeRates for BTC, ETC, and LTC
+                updateUI(
+                  btcRate: exchangeRateBTC,
+                  ethRate: exchangeRateETH,
+                  ltcRate: exchangeRateLTC,
+                );
               },
             ),
           ),
@@ -78,8 +95,10 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  Padding rateCard(cryptoAsset) {
-    // TODO: use setStates change rateForBTC, rateForETH, and rateForLTC instead of just $displayedRate
+  Padding rateCard({
+    @required cryptoAsset,
+    @required cryptoRate,
+  }) {
     return Padding(
       padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
       child: Card(
@@ -93,7 +112,7 @@ class _PriceScreenState extends State<PriceScreen> {
           child: Text(
             loading
                 ? 'loading'
-                : '1 $cryptoAsset = $displayedRate $selectedCurrency',
+                : '1 $cryptoAsset = $cryptoRate $selectedCurrency',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20.0,
@@ -105,16 +124,21 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  void updateUI(rates) {
-    // TODO: use setStates change rateForBTC, rateForETH, and rateForLTC
+  void updateUI({
+    @required double btcRate,
+    @required double ethRate,
+    @required double ltcRate,
+  }) {
     setState(() {
-      if (rates == null) {
-        displayedRate = 'Unable to get exhange rates';
+      if (btcRate == null) {
+        returnedBtcRate = 'Unable to get exhange rates';
         return;
       }
       debugPrint('loaded');
       loading = false;
-      displayedRate = rates.toString();
+      returnedBtcRate = btcRate.toString();
+      returnedEthRate = ethRate.toString();
+      returnedLtcRate = ltcRate.toString();
     });
   }
 }
