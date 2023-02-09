@@ -33,14 +33,15 @@ class _PriceScreenState extends State<PriceScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Padding(
               //   padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
               //   child: RateCard('BTC'),
               // ),
-              RateCard('BTC'),
-              RateCard('ETH'),
-              RateCard('LTC'),
+              rateCard('BTC'),
+              rateCard('ETH'),
+              rateCard('LTC'),
             ],
           ),
           Container(
@@ -68,6 +69,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     fiatCurrency: selectedCurrency);
 
                 updateUI(exchangeRateData);
+                //TODO: get exchangeRates for BTC, ETC, and LTC
               },
             ),
           ),
@@ -76,30 +78,35 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  Card RateCard(cryptoAsset) {
-    return Card(
-      color: Colors.lightBlueAccent,
-      elevation: 5.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-        child: loading
-            ? Text('loading')
-            : Text(
-                '1 $cryptoAsset = $displayedRate $selectedCurrency',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
+  Padding rateCard(cryptoAsset) {
+    // TODO: use setStates change rateForBTC, rateForETH, and rateForLTC instead of just $displayedRate
+    return Padding(
+      padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+      child: Card(
+        color: Colors.lightBlueAccent,
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+          child: Text(
+            loading
+                ? 'loading'
+                : '1 $cryptoAsset = $displayedRate $selectedCurrency',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }
 
   void updateUI(rates) {
+    // TODO: use setStates change rateForBTC, rateForETH, and rateForLTC
     setState(() {
       if (rates == null) {
         displayedRate = 'Unable to get exhange rates';

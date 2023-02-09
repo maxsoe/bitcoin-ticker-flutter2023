@@ -14,3 +14,5 @@ class Rates {
     return exchangeRate;
   }
 }
+
+//TODO: find exchange rates for BTC, ETH, and LTC
